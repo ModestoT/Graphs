@@ -103,13 +103,16 @@ class Graph:
             v = q.dequeue()
             # If it has not been visited...
             if v not in visited:
-              # Mark it as visited (print it and add it to the visited set)
+              # Mark it as visited and check if it is the destination vertex
                 visited.add(v)
+                # if it is check if the previous key has the current key in it
                 if destination_vertex in self.vertices[v]:
+                    # if it is return the path
                     if v in self.vertices[v-1]:
                         visited.add(destination_vertex)
                         path = list(visited)
                         return path
+                    # else remove the previeous key and return the list
                     else:                        
                         visited.remove(v-1)
                         visited.add(destination_vertex)
@@ -126,7 +129,29 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        # Create an empty Stack
+        s = Stack()
+        # Create an empty Visited set
+        visited = set()
+        # Push the starting vertex to the stack
+        s.push(starting_vertex)
+        # While the Stack is not empty...
+        while s.size() > 0:
+            # Pop the first vertex
+            v = s.pop()
+            # If it has not been visited...
+            if v not in visited:
+                # Mark it as visited and then check if if the destination vertex is in that key
+                visited.add(v)
+
+                if destination_vertex in self.vertices[v]:
+                    visited.add(destination_vertex)
+                    path = list(visited)
+                    return path
+                else:
+                    # else push each of its neighbors onto the Stack
+                    for neighbor in self.vertices[v]:
+                        s.push(neighbor)
 
 
 
@@ -204,4 +229,4 @@ if __name__ == '__main__':
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
-    # print(graph.dfs(1, 6))
+    print(graph.dfs(1, 6))
