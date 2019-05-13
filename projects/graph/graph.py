@@ -108,11 +108,13 @@ class Graph:
                 if destination_vertex in self.vertices[v]:
                     if v in self.vertices[v-1]:
                         visited.add(destination_vertex)
-                        return visited
+                        path = list(visited)
+                        return path
                     else:                        
                         visited.remove(v-1)
                         visited.add(destination_vertex)
-                        return visited
+                        path = list(visited)
+                        return path
                 # Then enqueue each of its neighbors in the queue
                 for neighbor in self.vertices[v]:
                     q.enqueue(neighbor)
