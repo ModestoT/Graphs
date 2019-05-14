@@ -75,31 +75,24 @@ class SocialGraph:
         q = []
         # Create an empty Visited set
         visited = {}  # Note that this is a dictionary, not a set
-        # Add A PATH TO the starting vertex to the queue
+        # Add A PATH TO the starting user ID to the queue
         q.append( [userID] )
         # While the queue is not empty...
         while len(q) > 0:
             # Dequeue the first PATH
-            # print('queue', q)
             path = q.pop(0)
-            # Grab the last vertex of the path
+            # Grab the last friend id of the path
             v = path[-1]
-            # print(v, visited)
             # If it has not been visited...
             if v not in visited:
-                # Then enqueue PATHS TO each of its neighbors in the queue
+                # Mark it as visted and set the key as the friend id and the value as the path to that friend id
                 visited[v] = path
-                # print('visted', visited)
+                # Then enqueue PATHS TO each of its neighbors in the queue
                 for neighbor in self.friendships[v]:
-                    # print('v', v)
                     path_copy = path.copy()
                     path_copy.append(neighbor)
                     q.append(path_copy)
-                    # path_copy = path.copy()
-                    # path_copy.append(neighbor)
-                    # visited[neighbor] = path_copy
-                    # q.append(path_copy)
-                    # print(neighbor, v, path_copy, q)
+                    
         return visited
 
 
