@@ -78,9 +78,11 @@ class SocialGraph:
         # Add A PATH TO the starting user ID to the queue
         q.append( [userID] )
         # While the queue is not empty...
+        # degrees = 0
         while len(q) > 0:
             # Dequeue the first PATH
             path = q.pop(0)
+            # degrees += len(path)
             # Grab the last friend id of the path
             v = path[-1]
             # If it has not been visited...
@@ -92,13 +94,15 @@ class SocialGraph:
                     path_copy = path.copy()
                     path_copy.append(neighbor)
                     q.append(path_copy)
-                    
+        # print((degrees/len(visited)))
         return visited
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populateGraph(10, 2)
-    print(sg.friendships)
+    sg.populateGraph(1000, 5)
+    # print('--------FriendShips-------------')
+    # print(sg.friendships)
     connections = sg.getAllSocialPaths(1)
+    print('--------Connections-------------')
     print(connections)
