@@ -1,4 +1,4 @@
-
+import random
 
 class User:
     def __init__(self, name):
@@ -44,11 +44,23 @@ class SocialGraph:
         self.lastID = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
-
         # Add users
+        for i in range(numUsers):
+            self.addUser(f"User {i + 1}")
 
         # Create friendships
+        # avgFriendships = totalFriendships / numUsers
+        # totalFriendships = avgFriendships * numUsers
+        possibleFriendships = []
+        for userID in self.users:
+            for friendID in range(userID + 1, self.lastID + 1):
+                possibleFriendships.append((userID, friendID))
+
+        random.shuffle(possibleFriendships)
+
+        for friendship_index in range(avgFriendships * numUsers // 2):
+            friendship = possibleFriendships[friendship_index]
+            self.addFriendship(friendship[0], friendship[1])
 
     def getAllSocialPaths(self, userID):
         """
@@ -59,8 +71,35 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
+        # Create an empty Queue
+        q = []
+        # Create an empty Visited set
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        # Add A PATH TO the starting vertex to the queue
+        q.append( [userID] )
+        # While the queue is not empty...
+        while len(q) > 0:
+            # Dequeue the first PATH
+            # print('queue', q)
+            path = q.pop(0)
+            # Grab the last vertex of the path
+            v = path[-1]
+            # print(v, visited)
+            # If it has not been visited...
+            if v not in visited:
+                # Then enqueue PATHS TO each of its neighbors in the queue
+                visited[v] = path
+                # print('visted', visited)
+                for neighbor in self.friendships[v]:
+                    # print('v', v)
+                    path_copy = path.copy()
+                    path_copy.append(neighbor)
+                    q.append(path_copy)
+                    # path_copy = path.copy()
+                    # path_copy.append(neighbor)
+                    # visited[neighbor] = path_copy
+                    # q.append(path_copy)
+                    # print(neighbor, v, path_copy, q)
         return visited
 
 
