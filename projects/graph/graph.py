@@ -121,7 +121,31 @@ class Graph:
                 # Then enqueue each of its neighbors in the queue
                 for neighbor in self.vertices[v]:
                     q.enqueue(neighbor)
-                    path.append([v, neighbor])
+        # other solution
+        # # Create an empty Queue
+        # q = Queue()
+        # # Create an empty Visited set
+        # visited = set()
+        # # Add A PATH TO the starting vertex to the queue
+        # q.enqueue( [starting_vertex] )
+        # # While the queue is not empty...
+        # while q.size() > 0:
+        #     # Dequeue the first PATH
+        #     path = q.dequeue()
+        #     # Grab the last vertex of the path
+        #     v = path[-1]
+        #     # Check if it's our destination
+        #     if v == destination_vertex:
+        #         return path
+        #     # If it has not been visited...
+        #     if v not in visited:
+        #         # Mark it as visited (add it to the visited set)
+        #         visited.add(v)
+        #         # Then enqueue PATHS TO each of its neighbors in the queue
+        #         for neighbor in self.vertices[v]:
+        #             path_copy = path.copy()
+        #             path_copy.append(neighbor)
+        #             q.enqueue(path_copy)
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -152,8 +176,31 @@ class Graph:
                     # else push each of its neighbors onto the Stack
                     for neighbor in self.vertices[v]:
                         s.push(neighbor)
-
-
+        # other solution
+        # # Create an empty Stack
+        # s = Stack()
+        # # Create an empty Visited set
+        # visited = set()
+        # # Add A PATH TO the starting vertex to the queue
+        # s.push( [starting_vertex] )
+        # # While the stack is not empty...
+        # while s.size() > 0:
+        #     # Pop the first PATH
+        #     path = s.pop()
+        #     # Grab the last vertex of the path
+        #     v = path[-1]
+        #     # Check if it's our destination
+        #     if v == destination_vertex:
+        #         return path
+        #     # If it has not been visited...
+        #     if v not in visited:
+        #         # Mark it as visited (add it to the visited set)
+        #         visited.add(v)
+        #         # Then push PATHS TO each of its neighbors in the stack
+        #         for neighbor in self.vertices[v]:
+        #             path_copy = path.copy()
+        #             path_copy.append(neighbor)
+        #             s.push(path_copy)
 
 
 
