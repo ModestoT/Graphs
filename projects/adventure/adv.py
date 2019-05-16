@@ -25,7 +25,7 @@ player = Player("Name", world.startingRoom)
 traversalGraph = {}
 traversalPath = []
 oppositeDirections = {'n': 's', 'e': 'w', 'w': 'e', 's': 'n'}
-
+goBack = False
 def bft(room, graph):
     # Create an empty Queue
     queue = []
@@ -52,8 +52,8 @@ def bft(room, graph):
                 possible_path = path.copy()
                 possible_path.append(direction)
                 queue.append(possible_path)
+
 def getRandomDirection(directions):
-    print(directions)
     value = random.randint(1,100)
 
     if len(directions) > 3:
@@ -89,41 +89,53 @@ while len(traversalGraph) != len(roomGraph):
         #if not add that room to the travesalgraph
         traversalGraph[currentRoom] = {r: '?' for r in player.currentRoom.getExits()}
     #get the directions available for that room
-    for direction in traversalGraph[currentRoom]:
-        possibleDirections.append(direction)
-    d = getRandomDirection(possibleDirections)
+    
+
+    if '?' in traversalGraph[currentRoom].values():
+        print('yes', traversalGraph[currentRoom])
+        for direction in traversalGraph[currentRoom]:
+            if traversalGraph[currentRoom][direction] == '?':
+                possibleDirections.append(direction)
+        goBack = False
+    else:
+        print('no', traversalGraph[currentRoom])
+        goBack = True
+    
+   
     #then go in some direction and then get that room if that directions value is ?
-    print(traversalGraph[currentRoom][d], d)
-    if traversalGraph[currentRoom][d] == '?':
-        #add that direction we went to the travesalpath
-        traversalPath.append(d)
-        player.travel(d)
-        #add the room number to the direction we went in to the travesalgraph for the room we were just in 
-        traversalGraph[currentRoom][d] = player.currentRoom.id 
-        #check if new room has been visited or not if not add it to the traversalgraph    
-        if player.currentRoom.id not in traversalGraph:
-            traversalGraph[player.currentRoom.id] = {r: '?' for r in player.currentRoom.getExits()}
-        #add the room number to the direction that is opposite of the direction we went for the current rooms number in the travesalgraph
-        traversalGraph[player.currentRoom.id][oppositeDirections[d]] = currentRoom
-        #do this until dead end
-        currentRoom = player.currentRoom.id
-        
-           
-    #once you reach dead end search for the shortest path back to where their is a ? direction for a room
-    path = bft(currentRoom, traversalGraph)
-    print(path)
-    # check if there is there is any paths
-    if path is not None:
-        # if there is check each room in the paths to see if the player can travel to it
-        for room in path:
-            # check each direction available in the current room that the player can move in
-            for direction in traversalGraph[currentRoom]:
-                # if the direction that is availble for the player to move to is equal to one of the rooms in the path move the player
-                if traversalGraph[currentRoom][direction] == room:
-                    traversalPath.append(direction)
-                    player.travel(direction)
-        # after the player as moved according the the path provided set the current room equal to the last room visted
-        currentRoom = player.currentRoom.id
+    
+
+    if not goBack:
+        d = getRandomDirection(possibleDirections)
+        print( d, currentRoom, goBack)
+        if traversalGraph[currentRoom][d] == '?':
+            #add that direction we went to the travesalpath
+            traversalPath.append(d)
+            player.travel(d)
+            #add the room number to the direction we went in to the travesalgraph for the room we were just in 
+            traversalGraph[currentRoom][d] = player.currentRoom.id 
+            #check if new room has been visited or not if not add it to the traversalgraph    
+            if player.currentRoom.id not in traversalGraph:
+                traversalGraph[player.currentRoom.id] = {r: '?' for r in player.currentRoom.getExits()}
+            #add the room number to the direction that is opposite of the direction we went for the current rooms number in the travesalgraph
+            traversalGraph[player.currentRoom.id][oppositeDirections[d]] = currentRoom
+            #do this until dead end
+            currentRoom = player.currentRoom.id 
+    else: 
+        #once you reach dead end search for the shortest path back to where their is a ? direction for a room
+        path = bft(currentRoom, traversalGraph)
+        # check if there is there is any paths
+        if path is not None:
+            # if there is check each room in the paths to see if the player can travel to it
+            for room in path:
+                # check each direction available in the current room that the player can move in
+                for direction in traversalGraph[currentRoom]:
+                    # if the direction that is availble for the player to move to is equal to one of the rooms in the path move the player
+                    if traversalGraph[currentRoom][direction] == room:
+                        traversalPath.append(direction)
+                        player.travel(direction)
+            # after the player as moved according the the path provided set the current room equal to the last room visted
+            currentRoom = player.currentRoom.id
     
     
 
