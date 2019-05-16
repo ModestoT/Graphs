@@ -24,23 +24,46 @@ player = Player("Name", world.startingRoom)
 
 traversalGraph = {}
 traversalPath = []
+oppositeDirections = {'n': 's', 'e': 'w', 'w': 'e', 's': 'n'}
+
 while len(traversalGraph) != len(roomGraph):
+    #get the current room
     currentRoom = player.currentRoom.id
-
+    #check if that room has been visited
     if currentRoom not in traversalGraph:
+        #if not add that room to the travesalgraph
         traversalGraph[currentRoom] = {r: '?' for r in player.currentRoom.getExits()}
-
+    #get the directions available for that room
     for direction in traversalGraph[currentRoom]:
+        print('direction',direction, traversalGraph[currentRoom])
+        #then go in some direction and then get that room if that directions value is ?
         if traversalGraph[currentRoom][direction] == '?':
+            #add that direction we went to the travesalpath
             traversalPath.append(direction)
             player.travel(direction)
-
+            #add the room number to the direction we went in to the travesalgraph for the room we were just in 
+            traversalGraph[currentRoom][direction] = player.currentRoom.id 
+            #check if new room has been visited or not if not add it to the traversalgraph    
             if player.currentRoom.id not in traversalGraph:
                 traversalGraph[player.currentRoom.id] = {r: '?' for r in player.currentRoom.getExits()}
-            break   
-    print(traversalPath)
-    break
-            
+            #add the room number to the direction that is opposite of the direction we went for the current rooms number in the travesalgraph
+            traversalGraph[player.currentRoom.id][oppositeDirections[direction]] = currentRoom
+            #do this until dead end
+            currentRoom = player.currentRoom.id
+            break
+           
+    #once you reach dead end search for the shorted path back to where their is a ? direction for a room
+    print(traversalPath, player.currentRoom.id, traversalGraph)
+    
+
+
+
+
+
+
+
+#repeat other loop
+
 
 print(traversalGraph)
 # TRAVERSAL TEST
