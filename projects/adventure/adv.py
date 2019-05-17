@@ -26,6 +26,7 @@ traversalGraph = {}
 traversalPath = []
 oppositeDirections = {'n': 's', 'e': 'w', 'w': 'e', 's': 'n'}
 goBack = False
+
 def bft(room, graph):
     # Create an empty Queue
     queue = []
@@ -53,32 +54,32 @@ def bft(room, graph):
                 possible_path.append(direction)
                 queue.append(possible_path)
 
-def getRandomDirection(directions):
-    value = random.randint(1,100)
+# def getRandomDirection(directions):
+#     value = random.randint(1,100)
 
-    if len(directions) > 3:
-        if value > 80:
-            return directions[0]
-        elif value > 50:
-            return directions[1]
-        elif value > 30:
-            return directions[2]
-        else:
-            return directions[3]
-    elif len(directions) > 2:
-        if value > 60:
-            return directions[0]
-        elif value > 40:
-            return directions[1]
-        else:
-            return directions[2]
-    elif len(directions) > 1:
-        if value > 50:
-            return directions[0]
-        else:
-            return directions[1]
-    else:
-        return directions[0]
+#     if len(directions) > 3:
+#         if value > 80:
+#             return directions[0]
+#         elif value > 50:
+#             return directions[1]
+#         elif value > 30:
+#             return directions[2]
+#         else:
+#             return directions[3]
+#     elif len(directions) > 2:
+#         if value > 60:
+#             return directions[0]
+#         elif value > 40:
+#             return directions[1]
+#         else:
+#             return directions[2]
+#     elif len(directions) > 1:
+#         if value > 50:
+#             return directions[0]
+#         else:
+#             return directions[1]
+#     else:
+#         return directions[0]
 
 while len(traversalGraph) != len(roomGraph):
     possibleDirections = []
@@ -90,15 +91,12 @@ while len(traversalGraph) != len(roomGraph):
         traversalGraph[currentRoom] = {r: '?' for r in player.currentRoom.getExits()}
     #get the directions available for that room
     
-
     if '?' in traversalGraph[currentRoom].values():
-        print('yes', traversalGraph[currentRoom])
         for direction in traversalGraph[currentRoom]:
             if traversalGraph[currentRoom][direction] == '?':
-                possibleDirections.append(direction)
+                possibleDirections.append(direction)    
         goBack = False
     else:
-        print('no', traversalGraph[currentRoom])
         goBack = True
     
    
@@ -106,24 +104,26 @@ while len(traversalGraph) != len(roomGraph):
     
 
     if not goBack:
-        d = getRandomDirection(possibleDirections)
-        print( d, currentRoom, goBack)
-        if traversalGraph[currentRoom][d] == '?':
+        # direction = getRandomDirection(possibleDirections)
+        direction = possibleDirections[random.randint(0, len(possibleDirections) - 1 )]
+        # print( d, currentRoom, goBack)
+        if traversalGraph[currentRoom][direction] == '?':
             #add that direction we went to the travesalpath
-            traversalPath.append(d)
-            player.travel(d)
+            traversalPath.append(direction)
+            player.travel(direction)
             #add the room number to the direction we went in to the travesalgraph for the room we were just in 
-            traversalGraph[currentRoom][d] = player.currentRoom.id 
+            traversalGraph[currentRoom][direction] = player.currentRoom.id 
             #check if new room has been visited or not if not add it to the traversalgraph    
             if player.currentRoom.id not in traversalGraph:
                 traversalGraph[player.currentRoom.id] = {r: '?' for r in player.currentRoom.getExits()}
             #add the room number to the direction that is opposite of the direction we went for the current rooms number in the travesalgraph
-            traversalGraph[player.currentRoom.id][oppositeDirections[d]] = currentRoom
+            traversalGraph[player.currentRoom.id][oppositeDirections[direction]] = currentRoom
             #do this until dead end
             currentRoom = player.currentRoom.id 
     else: 
         #once you reach dead end search for the shortest path back to where their is a ? direction for a room
         path = bft(currentRoom, traversalGraph)
+
         # check if there is there is any paths
         if path is not None:
             # if there is check each room in the paths to see if the player can travel to it
@@ -148,7 +148,7 @@ while len(traversalGraph) != len(roomGraph):
 #repeat other loop
 
 
-# print(traversalGraph)
+# print(traversalPath)
 # TRAVERSAL TEST
 visited_rooms = set()
 player.currentRoom = world.startingRoom
